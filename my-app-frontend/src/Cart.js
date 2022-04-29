@@ -13,7 +13,7 @@ function Cart({changePage, cartItems, modifyCart}) {
                 )}
             </ul>
             <h2 className="total">Total: ${parseFloat(cartItems.reduce((total, item) => total + item.price * item.quantity, 0)).toFixed(2)}</h2>
-            <button disabled={cartItems.length < 1} className="order-button" onClick={() => changePage('orderConfirmationPage')}>Order</button>
+            <button disabled={cartItems.length < 1} className="order-button" onClick={() => changePage('orderConfirmationPage')}>Checkout</button>
         </div>
     )
 }

@@ -21,7 +21,7 @@ function App() {
           .then(r => r.json())
           .then(setOrderHistory)
         })
-      .catch(() => alert("ERROR: no backend connection"))
+      .catch(() => alert("ERROR: no connection"))
   }, [])
 
   function modifyCart(product, increaseItem){
@@ -110,7 +110,7 @@ function App() {
         }
       })
       .then(setOrderHistory(orderHistory.filter(order => order.id !== order_id)))
-      .catch(() => alert("ERROR: no backend connection"))
+      .catch(() => alert("ERROR: no connection"))
   }
 
   function changePage(page){
@@ -134,6 +134,7 @@ function App() {
       case 'orderHistory':
         return <OrderHistoryPage
           orderHistory={orderHistory}
+          changePage={changePage}
           cancelOrder={cancelOrder}
         />
       case 'orderConfirmationPage':

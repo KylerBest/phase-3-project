@@ -3,16 +3,20 @@
 }
 header {
   display: flex;
+  align-items: center;
+  justify-content: center;
   border-bottom: 2px solid;
   padding: 1rem;
   position: sticky;
   h3 {
+    width: 15ch;
     &:hover{
       cursor: pointer;
+      transform: scale(1.1, 1.1);
     }
-    padding: 1rem;
+    padding: .25rem;
     border: double;
-    border-radius: 8px;
+    border-radius: 8px 0;
     margin: auto;
   }
   div{
@@ -30,17 +34,95 @@ body{
   display: flex;
   flex-direction: column;
   .order-history{
+    button{
+      transform: scale(1.2, 1.2);
+      font-weight: bold;
+      &:hover{
+        cursor: pointer;
+      }
+    }
     margin: auto;
     text-align: left;
     .order{
-      max-width: 50ch;
+      max-width: 75ch;
       margin: auto;
       border-bottom: 2px solid;
       position: relative;
       .cancel-order-button{
         position: absolute;
+        bottom: 1em;
+        right: 1em;
+      }
+      .edit-order-button{
+        position: absolute;
+        bottom: 4em;
+        right: 1em;
+      }
+    }
+    .edit-order-menu{
+      text-align: center;
+      .order-confirmation-page{
+        width: 95%;
+        height: 95%;
+        .cart{
+          height: 100%;
+          position: static;
+          align-items: center;
+          font-size: larger;
+          .cart-item{
+            font-size: medium;
+          }
+          .remove-button{
+            transform: scale(0.75, 0.75);
+            margin: .5rem;
+          }
+          .enter-name{
+            max-width: 25ch;
+            width: 100%;
+          }
+          .total, .name-form{
+            margin: 1rem;
+          }
+          .order-button{
+            padding: 1rem;
+            font-size: medium;
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+      &.hide{
+        display: none;
+      }
+      font-size: smaller;
+      z-index: 10;
+      position: fixed;
+      background-color: white;
+      box-shadow: 0 0 10em;
+      border-radius: 20px;
+      top: 5%;
+      left: 5%;
+      min-height: 78ch;
+      width: 90%;
+      height: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .back-button{
+        &:hover{
+          transform: scale(1.1, 1.1);
+          cursor: pointer;
+        }
+        position: absolute;
         top: 0;
-        right: 0;
+        left: 1em;
+        padding-inline: .5rem;
+        padding-block: .15rem;
+        border-radius: 10px;
+        background-color: rgb(221, 221, 221);
+      }
+      h1, h2{
+        margin: .5rem;
       }
     }
   }
@@ -79,8 +161,9 @@ body{
     border-radius: 10px;
     font-size: xx-large;
     max-height: 4ch;
-    &:hover{
+    &:hover:enabled{
       cursor: pointer;
+      box-shadow: inset 0 0 .1em white;
     }
     &:disabled{
     background-color: rgba(72, 82, 73, 0.829);
@@ -88,7 +171,7 @@ body{
   }
   .cart{
     margin-top: 1rem;
-    border-radius: 10px;
+    border-radius: 15px;
     background-color: #a1ebadad;
     min-height: 55ch;
     max-height: calc(100vh - 180px);
@@ -110,7 +193,7 @@ body{
         font-size: xx-large;
       }
       .remove-button{
-        border-radius: 5px;
+        border-radius: 5px 0;
         cursor: pointer;
         &:hover{
           background-color: rgb(216, 216, 216);
@@ -125,7 +208,7 @@ body{
     display: flex;
     flex-wrap: wrap;
     .catalog{
-      min-width: 50ch;
+      min-width: 30ch;
       flex: 1 1 60%;
       display: flex;
       flex-direction: column;
@@ -141,15 +224,16 @@ body{
           }
           flex: 1 1 13em;
           border: 1px solid;
-          border-radius: 10px;
+          border-radius: 10px 0;
           padding: 1rem;
           margin: 1rem;
           .add-to-cart-button{
             &:hover{
+              transform: scale(1.05, 1.05);
               cursor: pointer;
             }
             padding: 1rem;
-            border-radius: 10px;
+            border-radius: 10px 0;
             background-color: #7bff91;
             max-height: 5ch;
             font-size: larger;
