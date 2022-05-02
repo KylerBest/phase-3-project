@@ -5,6 +5,10 @@ function OrderListing({order, cancelOrder}){
 
     const [isShowingEditMenu, setIsShowingEditMenu] = useState(false)
 
+    function closeEditMenu(){
+        setIsShowingEditMenu(false)
+    }
+
     return (
         <div>
             <ul className="order">
@@ -21,12 +25,9 @@ function OrderListing({order, cancelOrder}){
                 <button className="edit-order-button" onClick={() => setIsShowingEditMenu(true)}>Edit Order</button>
             </ul>
             <div className={isShowingEditMenu ? 'edit-order-menu' : 'edit-order-menu hide'}>
-                <h3 
-                    className="back-button"
-                    onClick={() => setIsShowingEditMenu(false)}
-                >Back</h3>
                 <EditOrderPage
                     order={order}
+                    closeEditMenu={closeEditMenu}
                 />
             </div>
         </div>

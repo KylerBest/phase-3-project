@@ -11,7 +11,7 @@ class ApplicationController < Sinatra::Base
   get "/orders" do
     orders = Order.all
     orders.to_json(include: [
-      {customer: {only: :name}}, {order_items: {only: :quantity, include: 
+      {customer: {only: :name}}, {order_items: {include: 
         {product: {only: [:name, :category, :price]}}}
       }
     ])

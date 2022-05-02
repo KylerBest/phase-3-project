@@ -22,6 +22,7 @@ function App() {
           .then(setOrderHistory)
         })
       .catch(() => alert("ERROR: no connection"))
+      console.log(orderHistory)
   }, [])
 
   function modifyCart(product, increaseItem){
