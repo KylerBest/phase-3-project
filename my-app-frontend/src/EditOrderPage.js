@@ -19,6 +19,28 @@ function EditOrderPage({order, closeEditMenu}){
         setOrderItems([...changedOrder])
     }
 
+    function saveChanges(){
+        for(const item of orderItems){
+            if(item.quantity > 0) {
+                fetch(`http://localhost:9292/order_items/${item.id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        quantity: item.quantity
+                    })
+                })
+                .then(() => window.location.reload(false))
+            }else {
+                fetch(`http://localhost:9292/order_items/${item.id}`, {
+                    method: "DELETE"
+                })
+                .then(() => window.location.reload(false))
+            }
+        }
+    }
+
     return (
         <div className="order-confirmation-page">
             <h3 className="back-button" onClick={() => cancelChanges()}>Back</h3>
@@ -28,8 +50,8 @@ function EditOrderPage({order, closeEditMenu}){
                     {orderItems.map((item, index) => 
                         <p className="cart-item" key={index}> 
                             {item.name} (${parseFloat(item.price).toFixed(2)})  <span className="amount">x{item.quantity}</span> 
-                            {item.quantity > 0 ? <button className="remove-button" onClick={() => changeItemQuantity(item.id, false)}>➖</button> : null}
                             <button className="remove-button" onClick={() => changeItemQuantity(item.id, true)}>➕</button>
+                            {item.quantity > 0 ? <button className="remove-button" onClick={() => changeItemQuantity(item.id, false)}>➖</button> : null}
                         </p>
                     )}
                 </ul>
@@ -43,7 +65,7 @@ function EditOrderPage({order, closeEditMenu}){
                         disabled={true}
                     />
                 </form>
-                <button disabled={orderItems.length < 1} className="order-button">
+                <button onClick={saveChanges} disabled={orderItems.length < 1} className="order-button">
                     Save Changes
                 </button>
             </div>

@@ -68,4 +68,12 @@ class ApplicationController < Sinatra::Base
     order_item.to_json
   end 
 
+  patch "/order_items/:id" do 
+    order_item = OrderItem.find(params[:id])
+    order_item.update(
+      quantity: params[:quantity]
+    )
+    order_item.to_json
+  end
+
 end
