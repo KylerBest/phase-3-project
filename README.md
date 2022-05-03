@@ -3,6 +3,8 @@
 For my phase 3 project I made a fake store where you can buy from a completely
 random selection of items.
 
+![project showcase](https://github.com/KylerBest/phase-3-project/blob/main/Project%20GIF.gif)
+
 ## Meeting Project Requirements
 
 For the backend of this project, I have a database with 4 sets of data: products,
