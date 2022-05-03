@@ -22,7 +22,6 @@ function App() {
           .then(setOrderHistory)
         })
       .catch(() => alert("ERROR: no connection"))
-      console.log(orderHistory)
   }, [])
 
   function modifyCart(product, increaseItem){
@@ -67,7 +66,7 @@ function App() {
                 quantity: item.quantity
               })
             })
-              .then(() => window.location.reload(false))
+              .then(() => window.location.reload())
           }
         })
     }
@@ -108,10 +107,10 @@ function App() {
           fetch(`http://localhost:9292/order_items/${order_item.id}`, {
             method: "DELETE"
           })
+          .then(setOrderHistory(orderHistory.filter(order => order.id !== order_id)))
+          .catch(() => alert("ERROR: no connection"))
         }
       })
-      .then(setOrderHistory(orderHistory.filter(order => order.id !== order_id)))
-      .catch(() => alert("ERROR: no connection"))
   }
 
   function changePage(page){

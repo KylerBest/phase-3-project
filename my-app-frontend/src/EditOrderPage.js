@@ -31,12 +31,12 @@ function EditOrderPage({order, closeEditMenu}){
                         quantity: item.quantity
                     })
                 })
-                .then(() => window.location.reload(false))
+                .then(() => window.location.reload())
             }else {
                 fetch(`http://localhost:9292/order_items/${item.id}`, {
                     method: "DELETE"
                 })
-                .then(() => window.location.reload(false))
+                .then(() => window.location.reload())
             }
         }
     }

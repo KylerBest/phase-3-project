@@ -12,6 +12,7 @@ function OrderHistoryPage({orderHistory, cancelOrder}){
                         <OrderListing 
                             key={order.id}
                             order={order}
+                            cancelOrder={cancelOrder}
                         />
                     )
                 }
