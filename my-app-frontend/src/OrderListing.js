@@ -4,6 +4,7 @@ import EditOrderPage from "./EditOrderPage";
 function OrderListing({order, cancelOrder}){
 
     const [isShowingEditMenu, setIsShowingEditMenu] = useState(false)
+    const [orderItems, setOrderItems] = useState(order.order_items)
 
     function closeEditMenu(){
         setIsShowingEditMenu(false)
@@ -15,7 +16,7 @@ function OrderListing({order, cancelOrder}){
                 <h3>Customer: {order.customer.name}</h3>
                 <h3>Items:</h3>
                 {
-                    order.order_items.map(item =>
+                    orderItems.map(item =>
                         <li key={item.product.name}>{item.product.name} | ${parseFloat(item.product.price).toFixed(2)} | x{item.quantity}</li>)
                     }
                 <h3>Total: ${parseFloat(order.order_items.reduce(
@@ -27,7 +28,10 @@ function OrderListing({order, cancelOrder}){
             <div className={isShowingEditMenu ? 'edit-order-menu' : 'edit-order-menu hide'}>
                 <EditOrderPage
                     order={order}
+                    setOrderItems={setOrderItems}
+                    orderItems={orderItems}
                     closeEditMenu={closeEditMenu}
+                    cancelOrder={cancelOrder}
                 />
             </div>
         </div>

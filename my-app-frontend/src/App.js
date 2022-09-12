@@ -66,7 +66,10 @@ function App() {
                 quantity: item.quantity
               })
             })
-              .then(() => window.location.reload())
+              .then(() => {
+                setCartItems([])
+                changePage()
+              })
           }
         })
     }
@@ -107,10 +110,10 @@ function App() {
           fetch(`http://localhost:9292/order_items/${order_item.id}`, {
             method: "DELETE"
           })
-          .then(setOrderHistory(orderHistory.filter(order => order.id !== order_id)))
-          .catch(() => alert("ERROR: no connection"))
         }
       })
+      .then(setOrderHistory(orderHistory.filter(order => order.id !== order_id)))
+      .catch(() => alert("ERROR: no connection"))
   }
 
   function changePage(page){
@@ -119,7 +122,7 @@ function App() {
 
   const page = () => {
     switch(currentPage){
-      case 'catalog':
+      default:
         return <div className="main">
           <Catalog
             products={products}
@@ -133,6 +136,7 @@ function App() {
         </div>
       case 'orderHistory':
         return <OrderHistoryPage
+          setOrderHistory={setOrderHistory}
           orderHistory={orderHistory}
           changePage={changePage}
           cancelOrder={cancelOrder}

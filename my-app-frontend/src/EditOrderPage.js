@@ -1,22 +1,11 @@
-import React, {useState} from "react";
+import React from "react";
 
-function EditOrderPage({order, closeEditMenu}){
-    
-    const originalOrder = order.order_items.map(item => {
-        return {...item.product, id: item.id, quantity: item.quantity}
-    })
-    
-    const [orderItems, setOrderItems] = useState(originalOrder)
-
-    function cancelChanges(){
-        setOrderItems(originalOrder)
-        closeEditMenu()
-    }
+function EditOrderPage({order, setOrderItems, orderItems, closeEditMenu, cancelOrder}){
 
     function changeItemQuantity(item_id, increase){
-        let changedOrder = orderItems
-        changedOrder.find(itemToChange => itemToChange.id === item_id).quantity += increase? 1 : -1
-        setOrderItems([...changedOrder])
+        let changedOrderItems = orderItems
+        changedOrderItems.find(itemToChange => itemToChange.id === item_id).quantity += increase? 1 : -1
+        setOrderItems([...changedOrderItems])
     }
 
     function saveChanges(){
@@ -31,25 +20,31 @@ function EditOrderPage({order, closeEditMenu}){
                         quantity: item.quantity
                     })
                 })
-                .then(() => window.location.reload())
+                .then(() => closeEditMenu())
             }else {
                 fetch(`http://localhost:9292/order_items/${item.id}`, {
                     method: "DELETE"
                 })
-                .then(() => window.location.reload())
+                .then(() => {
+                    setOrderItems(orderItems.filter(i => i.id !== item.id))
+                    closeEditMenu()
+                })
             }
+        }
+        if(orderItems.filter(i => i.quantity === 0).length === orderItems.length) 
+        {
+            cancelOrder(order.id)
         }
     }
 
     return (
         <div className="order-confirmation-page">
-            <h3 className="back-button" onClick={() => cancelChanges()}>Back</h3>
             <h1>Edit Order</h1>
             <div className="cart">
                 <ul className="cart-items">
                     {orderItems.map((item, index) => 
                         <p className="cart-item" key={index}> 
-                            {item.name} (${parseFloat(item.price).toFixed(2)})  <span className="amount">x{item.quantity}</span> 
+                            {item.product.name} (${parseFloat(item.product.price).toFixed(2)})  <span className="amount">x{item.quantity}</span> 
                             <button className="remove-button" onClick={() => changeItemQuantity(item.id, true)}>➕</button>
                             {item.quantity > 0 ? <button className="remove-button" onClick={() => changeItemQuantity(item.id, false)}>➖</button> : null}
                         </p>
