@@ -1,6 +1,6 @@
 import React from "react";
 
-function Catalog({products, modifyCart}) {
+function Catalog({products, updateCart}) {
     return (
         <div className="catalog">
             <h1>Catalog</h1>
@@ -12,7 +12,7 @@ function Catalog({products, modifyCart}) {
                         <p>category: {product.category}</p>
                         <button 
                             className="add-to-cart-button"
-                            onClick={() => modifyCart(product, true)}
+                            onClick={() => updateCart(product, 1)}
                         >Add to Cart</button>
                     </div>
                 )}

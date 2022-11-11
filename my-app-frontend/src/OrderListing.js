@@ -31,7 +31,6 @@ function OrderListing({order, cancelOrder}){
                     setOrderItems={setOrderItems}
                     orderItems={orderItems}
                     closeEditMenu={closeEditMenu}
-                    cancelOrder={cancelOrder}
                 />
             </div>
         </div>

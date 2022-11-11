@@ -193,7 +193,8 @@ body{
         font-size: xx-large;
       }
       .remove-button{
-        border-radius: 5px 0;
+        margin-inline: 5px;
+        border-radius: 5px;
         cursor: pointer;
         &:hover{
           background-color: rgb(216, 216, 216);
