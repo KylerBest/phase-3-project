@@ -3,77 +3,50 @@ class ApplicationController < Sinatra::Base
   
   # Add your routes here
 
-  get "/products" do
-    products = Product.all
-    products.to_json
-  end
-
-  get "/orders" do
-    orders = Order.all
-    orders.to_json(include: [
-      {customer: {only: :name}}, {order_items: {include: 
-        {product: {only: [:name, :category, :price]}}}
-      }
-    ])
-  end
-
-  get "/customers" do 
+  get "/startup" do
     customers = Customer.all
-    customers.to_json
-  end
+    products = Product.all
+    
+    startup = Hash[products: products,
+      customers: JSON.parse(customers.to_json(include: 
+        {orders: {include: 
+          [:customer, {order_items: {include: 
+            :product}}]}}))]
 
-  get "/customers/:name" do
-    customer = Customer.find_by(name: params[:name])
-    customer.to_json
-  end
-
-  delete "/customers/:id" do
-    customer = Customer.find(params[:id])
-    customer.destroy
-    customer.to_json
+    startup.to_json
   end
 
   delete "/orders/:id" do 
     order = Order.find(params[:id])
     order.destroy
-    order.to_json(include: [:order_items, :customer])
+    order.to_json(include: :customer)
   end
 
-  delete "/order_items/:id" do
-    order_item = OrderItem.find(params[:id])
-    order_item.destroy
-    order_item.to_json
-  end
-  
-  post "/customers" do 
-    customer = Customer.create(
-      name: params[:name]
-    )
-    customer.to_json
-  end
-  
   post "/orders" do 
-    order = Order.create(
-      customer_id: params[:customer_id]
-    )
-    order.to_json
+    customer = Customer.find_or_create_by(name: params[:name])
+    order = customer.orders.create()
+    params[:cart].each do |key, product|
+      order.order_items.create(
+        product_id: key,
+        quantity: product[:quantity]
+      )
+    end
+    order.to_json(include: [:customer, {order_items: {include: :product}}])
   end
 
-  post "/order_items" do
-    order_item = OrderItem.create(
-      product_id: params[:product_id],
-      order_id: params[:order_id],
-      quantity: params[:quantity]
-    )
-    order_item.to_json
-  end 
-
-  patch "/order_items/:id" do 
-    order_item = OrderItem.find(params[:id])
-    order_item.update(
-      quantity: params[:quantity]
-    )
-    order_item.to_json
+  patch "/orders/:id" do 
+    order = Order.find(params[:id])
+    params[:items].each do |item|
+      new_item = order.order_items.find(item[:id])
+      new_item.update(quantity: item[:quantity])
+      if new_item[:quantity] < 1
+        new_item.destroy
+      end
+    end
+    if order.order_items.length == 0 
+      order.destroy
+    end
+    order.to_json(include: [:customer, {order_items: {include: :product}}])
   end
 
 end
