@@ -1,51 +1,25 @@
 import React, {useState} from "react";
 
-function OrderConfirmationPage({cart, setCart, updateCart, changePage}){
+function OrderConfirmationPage({cart, setCart, updateCart, changePage, updateHistory}){
     const [name, setName] = useState("")
 
-    async function placeOrder(){
-        let customerPromise = await fetch(`http://localhost:9292/customers/${name}`)
-        let customer = await customerPromise.json()
-        if(!customer){
-            customerPromise = await fetch(`http://localhost:9292/customers`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name
-                })
-            })
-            customer = await customerPromise.json()
-        }
-        let orderPromise = await fetch(`http://localhost:9292/orders`, {
+    function placeOrder(){
+        fetch("http://localhost:9292/orders", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type':'application/json'
             },
             body: JSON.stringify({
-                customer_id: customer.id
+                name: name,
+                cart: cart
             })
         })
-        let order = await orderPromise.json()
-        let orderItemPromises = []
-        for(const product of Object.values(cart)){
-            orderItemPromises.push(fetch(`http://localhost:9292/order_items`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    product_id: product.id,
-                    order_id: order.id,
-                    quantity: product.quantity
-                })
-            }))
-        }
-        Promise.all(orderItemPromises).then(() => {
-            setCart({})
-            changePage()
-        })
+            .then(r => r.json())
+            .then(order => {
+                setCart({})
+                updateHistory(order)
+                changePage()
+            })
     }
 
     return (

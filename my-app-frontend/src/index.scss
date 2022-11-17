@@ -48,6 +48,13 @@ body{
       margin: auto;
       border-bottom: 2px solid;
       position: relative;
+      .customer-name{
+        
+        &:hover{
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
       .cancel-order-button{
         position: absolute;
         bottom: 1em;

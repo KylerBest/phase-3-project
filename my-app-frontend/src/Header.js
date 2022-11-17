@@ -9,7 +9,7 @@ function Header({changePage}) {
                 <h1>Kyler's Online Store</h1>
                 <p>A Random Assortment of Products</p>
             </div>
-            <h3 onClick={() => changePage('orderHistory')}>Order History</h3>
+            <h3 onClick={() => changePage('history')}>Order History</h3>
         </header>
     )
 }

@@ -1,40 +1,28 @@
 import React from "react";
 
-function EditOrderPage({order, setOrderItems, orderItems, closeEditMenu, cancelOrder}){
+function EditOrderPage({order, setOrderItems, orderItems, closeEditMenu, onCancel}){
 
-    function changeItemQuantity(item_id, increase){
+    function changeItemQuantity(item_id, amount){
         let changedOrderItems = orderItems
-        changedOrderItems.find(itemToChange => itemToChange.id === item_id).quantity += increase? 1 : -1
+        changedOrderItems.find(itemToChange => itemToChange.id === item_id).quantity += amount
         setOrderItems([...changedOrderItems])
     }
 
-    function saveChanges(){
-        for(const item of orderItems){
-            if(item.quantity > 0) {
-                fetch(`http://localhost:9292/order_items/${item.id}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        quantity: item.quantity
-                    })
-                })
-                .then(() => closeEditMenu())
-            }else {
-                fetch(`http://localhost:9292/order_items/${item.id}`, {
-                    method: "DELETE"
-                })
-                .then(() => {
-                    setOrderItems(orderItems.filter(i => i.id !== item.id))
-                    closeEditMenu()
-                })
-            }
-        }
-        if(orderItems.filter(i => i.quantity === 0).length === orderItems.length) 
-        {
-            cancelOrder(order.id)
-        }
+    function saveOrderChanges(){
+        fetch(`http://localhost:9292/orders/${order.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                items: orderItems
+            })
+        })
+        .then(r => r.json())
+        .then(order => {
+            order.order_items.length > 0 ? setOrderItems(order.order_items) : onCancel(order)
+            closeEditMenu()
+        })
     }
 
     return (
@@ -45,12 +33,12 @@ function EditOrderPage({order, setOrderItems, orderItems, closeEditMenu, cancelO
                     {orderItems.map((item, index) => 
                         <p className="cart-item" key={index}> 
                             {item.product.name} (${parseFloat(item.product.price).toFixed(2)})  <span className="amount">x{item.quantity}</span> 
-                            <button className="remove-button" onClick={() => changeItemQuantity(item.id, true)}>➕</button>
-                            {item.quantity > 0 ? <button className="remove-button" onClick={() => changeItemQuantity(item.id, false)}>➖</button> : null}
+                            <button className="remove-button" onClick={() => changeItemQuantity(item.id, 1)}>➕</button>
+                            {item.quantity > 0 ? <button className="remove-button" onClick={() => changeItemQuantity(item.id, -1)}>➖</button> : null}
                         </p>
                     )}
                 </ul>
-                <h2 className="total">Total: ${parseFloat(orderItems.reduce((total, item) => total + item.price * item.quantity, 0)).toFixed(2)}</h2>
+                <h2 className="total">Total: ${parseFloat(orderItems.reduce((total, item) => total + item.product.price * item.quantity, 0)).toFixed(2)}</h2>
                 <form className="name-form">
                     <input 
                         className="enter-name" 
@@ -60,7 +48,7 @@ function EditOrderPage({order, setOrderItems, orderItems, closeEditMenu, cancelO
                         disabled={true}
                     />
                 </form>
-                <button onClick={saveChanges} disabled={orderItems.length < 1} className="order-button">
+                <button onClick={saveOrderChanges} disabled={orderItems.length < 1} className="order-button">
                     Save Changes
                 </button>
             </div>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import EditOrderPage from "./EditOrderPage";
 
-function OrderListing({order, cancelOrder}){
+function OrderListing({order, cancelOrder, onCancel, focusCustomer}){
 
     const [isShowingEditMenu, setIsShowingEditMenu] = useState(false)
     const [orderItems, setOrderItems] = useState(order.order_items)
@@ -13,7 +13,7 @@ function OrderListing({order, cancelOrder}){
     return (
         <div>
             <ul className="order">
-                <h3>Customer: {order.customer.name}</h3>
+                <h3 className = "customer-name" onClick={() => focusCustomer(order.customer.name)}>Customer: {order.customer.name}</h3>
                 <h3>Items:</h3>
                 {
                     orderItems.map(item =>
@@ -31,6 +31,7 @@ function OrderListing({order, cancelOrder}){
                     setOrderItems={setOrderItems}
                     orderItems={orderItems}
                     closeEditMenu={closeEditMenu}
+                    onCancel={onCancel}
                 />
             </div>
         </div>
