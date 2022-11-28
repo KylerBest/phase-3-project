@@ -43,7 +43,7 @@ function App() {
 
   function focusCustomer(name){
     if(focusedCustomer === name){
-        return
+      changePage('customerPage')
     }
     setFocusedCustomer(name)
     changePage('customerPage')
